@@ -1,0 +1,47 @@
+{
+  "name": "cobra-security",
+  "version": "0.1.0",
+  "description": "AI-augmented security and developer productivity platform",
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "pnpm": {
+    "onlyBuiltDependencies": []
+  },
+  "bin": {
+    "cobra": "./src/cli.js"
+  },
+  "scripts": {
+    "dev": "node src/cli.js",
+    "start": "node src/cli.js",
+    "lint": "eslint src/**/*.js test/**/*.js",
+    "lint:fix": "eslint src/**/*.js test/**/*.js --fix",
+    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"*.md\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"test/**/*.js\" \"*.md\"",
+    "test": "node --test test/**/*.test.js",
+    "test:watch": "node --test --watch test/**/*.test.js",
+    "security:audit": "pnpm audit --audit-level moderate",
+    "preinstall": "node scripts/check-pnpm.js || exit 0"
+  },
+  "keywords": [
+    "security",
+    "cli",
+    "ai",
+    "devsecops",
+    "infrastructure",
+    "scanning"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=8.0.0"
+  },
+  "dependencies": {
+    "commander": "12.1.0"
+  },
+  "devDependencies": {
+    "eslint": "9.39.0",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.6.2"
+  }
+}
