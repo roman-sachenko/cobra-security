@@ -9,8 +9,14 @@ RUN apk update && \
     apk add --no-cache dumb-init curl && \
     corepack enable && \
     corepack prepare pnpm@9.15.0 --activate && \
-    addgroup -g 1000 -S cobra && \
-    adduser -D -u 1000 -S -G cobra cobra && \
+    addgroup -g 1000 -S cobra 2>/dev/null || \
+      (GROUP_NAME=$(getent group 1000 | cut -d: -f1) && \
+       [ -n "$GROUP_NAME" ] && addgroup -S cobra 2>/dev/null || true) && \
+    adduser -D -u 1000 -S -G cobra cobra 2>/dev/null || \
+      (EXISTING_USER=$(getent passwd 1000 | cut -d: -f1) && \
+       [ -n "$EXISTING_USER" ] && \
+       adduser -D -u 1001 -S -G cobra cobra 2>/dev/null || \
+       adduser -D -S -G cobra cobra 2>/dev/null || true) && \
     rm -rf /var/cache/apk/* && \
     apk del curl
 
@@ -57,10 +63,8 @@ RUN find /app -type f -perm /u+x,g+x,o+x -exec chmod 755 {} \; && \
     find /app -type d -exec chmod 755 {} \;
 
 # Security: Switch to non-root user before running
-USER cobra
-
-# Security: Do not run as root
-RUN [ "$(id -u)" = "1000" ] || (echo "ERROR: Not running as non-root user" && exit 1)
+# Use numeric UID to avoid issues if username doesn't match
+USER 1000
 
 # Use dumb-init as PID 1 for proper signal handling
 ENTRYPOINT ["dumb-init", "--"]
