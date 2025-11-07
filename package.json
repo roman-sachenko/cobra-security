@@ -37,7 +37,7 @@
     "pnpm": ">=8.0.0"
   },
   "dependencies": {
-    "commander": "12.1.0"
+    "commander": "14.0.2"
   },
   "devDependencies": {
     "eslint": "9.39.0",
